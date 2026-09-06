@@ -4,161 +4,317 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>400 — Requisição Inválida · GCN Soluções</title>
+  <title>400 — Requisição Inválida · GCN Hosting</title>
   <style>
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&family=Orbitron:wght@700&display=swap');
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --bg:#fafafa;--grid-dot:rgba(0,0,0,.07);--border:rgba(0,0,0,.1);
-  --surface:#fff;--surface-hover:rgba(0,0,0,.04);
-  --text:#0a0a0a;--text-muted:#525252;--text-subtle:#a3a3a3;
-  --accent:#f43f5e;--accent-dim:rgba(244,63,94,.09);--accent-border:rgba(244,63,94,.22);
-  --radius:8px;
-  --font-sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --font-mono:ui-monospace,"SFMono-Regular",Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  /* Primary — hsl(250 59% 58%) = #7c5fdb */
+  --primary:hsl(250,59%,58%);
+  --primary-rgb:124,95,219;
+  --primary-light:hsl(250,80%,72%);
+  --primary-dim:rgba(124,95,219,0.09);
+  --primary-border:rgba(124,95,219,0.25);
+  --primary-glow:rgba(124,95,219,0.15);
+
+  /* Backgrounds — deep purple-black */
+  --bg:hsl(260,20%,3%);          /* #070609 */
+  --bg-card:hsl(252,48%,9%);     /* #110c23 */
+  --bg-glass:rgba(7,6,9,0.80);
+
+  /* Borders */
+  --border:hsl(252,18%,22%);     /* #2e2a40 */
+  --border-subtle:rgba(255,255,255,0.09);
+
+  /* Text */
+  --text:hsl(0,0%,92%);          /* #ebebeb */
+  --text-muted:hsl(0,0%,60%);    /* #999 */
+  --text-subtle:hsl(0,0%,28%);   /* #474747 */
+
+  /* State — error */
+  --error:hsl(0,75%,60%);
+  --error-dim:rgba(220,56,56,0.10);
+  --error-border:rgba(220,56,56,0.28);
+
+  /* State — warning */
+  --warning:hsl(25,95%,53%);
+  --warning-dim:rgba(245,126,28,0.10);
+  --warning-border:rgba(245,126,28,0.28);
+
+  /* Per-page accent (default = primary) */
+  --acc:var(--primary);
+  --acc-rgb:var(--primary-rgb);
+  --acc-dim:var(--primary-dim);
+  --acc-border:var(--primary-border);
+
+  --font:'Onest',ui-sans-serif,system-ui,sans-serif;
+  --font-mono:ui-monospace,'SFMono-Regular',Menlo,Monaco,Consolas,monospace;
+  --font-brand:'Orbitron',sans-serif;
 }
-@media(prefers-color-scheme:dark){
-  :root{
-    --bg:#0c0c0c;--grid-dot:rgba(255,255,255,.05);--border:rgba(255,255,255,.09);
-    --surface:rgba(255,255,255,.04);--surface-hover:rgba(255,255,255,.07);
-    --text:#fafafa;--text-muted:#a3a3a3;--text-subtle:#404040;
-    --accent-dim:rgba(244,63,94,.12);--accent-border:rgba(244,63,94,.3);
-  }
-}
-html,body{min-height:100%}
+
+html{color-scheme:dark}
 body{
-  display:flex;flex-direction:column;min-height:100dvh;
-  font-family:var(--font-sans);background-color:var(--bg);color:var(--text);
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
-  background-image:radial-gradient(circle,var(--grid-dot) 1px,transparent 1px);
-  background-size:28px 28px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(124,95,219,.3) transparent;
 }
+::selection{background:rgba(124,95,219,.30);color:#fff}
+
+/* Grid lines — vixpi .vixpi-grid-bg */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(124,95,219,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(124,95,219,.03) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* Ambient glows */
+.glow-a,.glow-b{
+  position:fixed;border-radius:50%;
+  pointer-events:none;z-index:0;
+}
+.glow-a{
+  width:640px;height:640px;top:-200px;right:-160px;
+  background:rgba(124,95,219,.11);filter:blur(140px);
+}
+.glow-b{
+  width:500px;height:500px;bottom:-180px;left:-100px;
+  background:rgba(124,95,219,.07);filter:blur(140px);
+}
+
+/* Layout */
 .wrap{
+  position:relative;z-index:1;
   width:100%;max-width:80rem;margin:0 auto;
-  border-left:1px dashed var(--border);border-right:1px dashed var(--border);
   display:flex;flex-direction:column;min-height:100dvh;
+  border-left:1px dashed var(--border-subtle);
+  border-right:1px dashed var(--border-subtle);
 }
-.divider{height:0;position:relative;overflow:visible}
-.divider::after{content:'';position:absolute;top:-1px;left:0;right:0;border-top:1px dashed var(--border)}
-/* header */
+.divider{
+  height:0;position:relative;overflow:visible;flex-shrink:0;
+}
+.divider::after{
+  content:'';position:absolute;top:-1px;left:0;right:0;
+  border-top:1px dashed var(--border-subtle);
+}
+
+/* Header */
 .header{
-  padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
+  height:64px;padding:0 32px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text)}
-.logo-mark{
-  width:22px;height:22px;background:var(--accent);border-radius:5px;
+
+.logo{
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;color:var(--text);
+}
+.logo-icon{
+  width:32px;height:32px;
+  border-radius:9px;
+  background:linear-gradient(135deg,rgba(124,95,219,.30),rgba(124,95,219,.10));
+  border:1px solid rgba(124,95,219,.40);
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.logo-mark svg{width:12px;height:12px;fill:#fff}
-.logo-name{font-family:var(--font-mono);font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--text)}
-.badge{
-  display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px;
-  border-radius:6px;font-family:var(--font-mono);font-size:11px;font-weight:500;
-  letter-spacing:.08em;text-transform:uppercase;
-  border:1px solid var(--accent-border);background:var(--accent-dim);color:var(--accent);
+.logo-icon svg{
+  width:17px;height:17px;
+  stroke:hsl(250,80%,75%);fill:none;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
 }
-.badge svg{width:9px;height:9px;fill:var(--accent);flex-shrink:0}
-/* main */
+.logo-name{
+  font-family:var(--font-brand);
+  font-size:13px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  background:linear-gradient(135deg,#fff 20%,hsl(250,80%,75%));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.status-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  height:28px;padding:0 12px;border-radius:9999px;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:.10em;text-transform:uppercase;
+  border:1px solid var(--acc-border);
+  background:var(--acc-dim);
+  color:var(--acc);
+}
+.status-pill .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--acc);box-shadow:0 0 8px var(--acc);
+  animation:blink 2.4s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* Main */
 .main{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:80px 28px;text-align:center;position:relative;overflow:hidden;
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:96px 32px;text-align:center;position:relative;
 }
-.bg-code{
+.bg-num{
   position:absolute;font-family:var(--font-mono);
-  font-size:clamp(140px,30vw,280px);font-weight:700;letter-spacing:-.04em;
-  user-select:none;pointer-events:none;
-  color:var(--text);opacity:.04;
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  white-space:nowrap;z-index:0;line-height:1;
+  font-size:clamp(160px,33vw,320px);
+  font-weight:700;letter-spacing:-.05em;line-height:1;
+  color:rgba(124,95,219,.045);
+  top:50%;left:50%;transform:translate(-50%,-52%);
+  user-select:none;pointer-events:none;white-space:nowrap;
 }
-.content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
-.icon-wrap{
-  width:44px;height:44px;border-radius:11px;
-  background:var(--accent-dim);border:1px solid var(--accent-border);
+.content{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  max-width:460px;
+}
+
+/* Icon card */
+.icon-card{
+  width:56px;height:56px;border-radius:14px;
+  background:var(--acc-dim);
+  border:1px solid var(--acc-border);
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:28px;color:var(--accent);
+  margin-bottom:32px;position:relative;
+  box-shadow:0 0 40px var(--acc-dim);
 }
-.icon-wrap svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+/* top shimmer — vixpi feature card pattern */
+.icon-card::before{
+  content:'';
+  position:absolute;top:-1px;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--acc),transparent);
+}
+.icon-card svg{
+  width:24px;height:24px;
+  stroke:var(--acc);fill:none;
+  stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;
+}
+
 .code{
-  font-family:var(--font-mono);font-size:clamp(48px,10vw,80px);font-weight:700;
-  letter-spacing:-.03em;color:var(--text);line-height:1;margin-bottom:14px;
+  font-family:var(--font-mono);
+  font-size:clamp(52px,11vw,88px);
+  font-weight:700;letter-spacing:-.04em;line-height:1;
+  margin-bottom:16px;
+  background:linear-gradient(150deg,var(--text) 30%,var(--text-muted) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
 }
 .title{
-  font-size:clamp(17px,2.5vw,21px);font-weight:500;color:var(--text);
-  margin-bottom:12px;letter-spacing:-.01em;
+  font-size:clamp(18px,2.8vw,23px);
+  font-weight:600;letter-spacing:-.022em;
+  color:var(--text);margin-bottom:14px;line-height:1.25;
 }
 .desc{
-  font-size:15px;color:var(--text-muted);max-width:380px;line-height:1.65;
-  font-weight:300;margin-bottom:40px;
+  font-size:15px;line-height:1.72;
+  font-weight:300;color:var(--text-muted);
+  margin-bottom:44px;
 }
-.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* Buttons */
+.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
 .btn{
-  display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;
-  border-radius:8px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;
-  border:1px solid var(--border);background:var(--surface);color:var(--text-muted);
-  transition:background .15s,color .15s,border-color .15s;font-family:inherit;
+  display:inline-flex;align-items:center;gap:7px;
+  height:40px;padding:0 20px;border-radius:10px;
+  font-family:var(--font);font-size:13.5px;font-weight:500;
+  text-decoration:none;cursor:pointer;
+  transition:all .18s ease;white-space:nowrap;
 }
-.btn:hover{background:var(--surface-hover);color:var(--text)}
+.btn svg{
+  width:14px;height:14px;flex-shrink:0;
+  stroke:currentColor;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.btn-ghost{
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  color:var(--text-muted);
+}
+.btn-ghost:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(255,255,255,.15);
+  color:var(--text);
+}
 .btn-primary{
-  background:var(--accent);border-color:var(--accent);color:#fff;
+  border:1px solid rgba(124,95,219,.5);
+  background:linear-gradient(135deg,rgba(124,95,219,.40),rgba(124,95,219,.20));
+  color:#fff;
+  box-shadow:0 0 28px rgba(124,95,219,.14);
 }
-.btn-primary:hover{opacity:.86;color:#fff}
-/* footer */
+.btn-primary:hover{
+  background:linear-gradient(135deg,rgba(124,95,219,.55),rgba(124,95,219,.32));
+  box-shadow:0 0 44px rgba(124,95,219,.24);
+}
+
+/* Footer */
 .footer{
-  padding:14px 28px;display:flex;align-items:center;justify-content:space-between;
-  font-size:11px;color:var(--text-subtle);flex-shrink:0;
+  padding:16px 32px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
 }
-.footer a{color:var(--text-subtle);text-decoration:none;transition:color .15s}
-.footer a:hover{color:var(--text-muted)}
-.footer-links{display:flex;align-items:center;gap:14px;font-family:var(--font-mono)}
-.footer-copy{font-family:var(--font-mono)}
+.footer-left{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-subtle);
+  display:flex;align-items:center;gap:8px;
+}
+.footer-left .sep{color:var(--border)}
+.footer-right{
+  display:flex;align-items:center;gap:20px;
+  font-family:var(--font-mono);font-size:11px;
+}
+.footer-right a{
+  color:var(--text-subtle);text-decoration:none;
+  letter-spacing:.04em;transition:color .15s;
+}
+.footer-right a:hover{color:hsl(250,80%,75%)}
+
 @media(max-width:640px){
-  .header,.footer{padding:0 18px}
+  .header,.footer{padding:0 18px;height:56px}
+  .footer{height:auto;padding:14px 18px}
   .main{padding:60px 18px}
+  .logo-name{display:none}
 }
-  :root{--accent:#f59e0b;
-    --accent-dim:rgba(245,158,11,.09);
-    --accent-border:rgba(245,158,11,.22);}
-  @media(prefers-color-scheme:dark){:root{--accent-dim:rgba(245,158,11,.12);
-    --accent-border:rgba(245,158,11,.3);}}
+:root{--acc:var(--warning);--acc-dim:var(--warning-dim);--acc-border:var(--warning-border)}
   </style>
 </head>
 <body>
+  <div class="glow-a" aria-hidden="true"></div>
+  <div class="glow-b" aria-hidden="true"></div>
+
   <div class="wrap">
 
-    <!-- Header -->
     <header class="header">
-      <a href="/" class="logo" aria-label="GCN Soluções">
-        <div class="logo-mark" aria-hidden="true"><svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;fill:#fff;flex-shrink:0"><path d="M6 1a5 5 0 1 0 5 5H6V4h4.9A5 5 0 0 0 6 1z"/></svg></div>
-        <span class="logo-name">GCN</span>
+      <a href="/" class="logo" aria-label="GCN Hosting">
+        <div class="logo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div>
+        <span class="logo-name">GCNHosting</span>
       </a>
-      <span class="badge" aria-label="Código de erro 400">
-        <svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="4" cy="4" r="3"/></svg>
+      <span class="status-pill" aria-label="Status 400">
+        <span class="dot" aria-hidden="true"></span>
         400
       </span>
     </header>
 
     <div class="divider" role="separator"></div>
 
-    <!-- Main content -->
     <main class="main">
-      <div class="bg-code" aria-hidden="true">400</div>
+      <span class="bg-num" aria-hidden="true">400</span>
+
       <div class="content">
-        <div class="icon-wrap" aria-hidden="true">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        <div class="icon-card" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </div>
         <div class="code" aria-hidden="true">400</div>
         <h1 class="title">Requisição Inválida</h1>
-        <p class="desc">O servidor não conseguiu interpretar a requisição. Verifique os parâmetros e o formato dos dados enviados.</p>
+        <p class="desc">O servidor não conseguiu processar a requisição. Verifique os parâmetros, cabeçalhos e o formato dos dados enviados.</p>
         <div class="actions">
-          <button class="btn" onclick="history.back()" type="button">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-            Voltar
+          <button class="btn btn-ghost" onclick="history.back()" type="button">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"/></svg>Voltar
           </button>
           <a href="/" class="btn btn-primary">
-            Início
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+            Página inicial<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"/></svg>
           </a>
         </div>
       </div>
@@ -166,12 +322,16 @@ body{
 
     <div class="divider" role="separator"></div>
 
-    <!-- Footer -->
     <footer class="footer">
-      <span class="footer-copy">gcnsolucoes.com.br</span>
-      <nav class="footer-links" aria-label="Links úteis">
+      <div class="footer-left">
+        <span>gcnsolucoes.com.br</span>
+        <span class="sep">·</span>
+        <span>erro 400</span>
+      </div>
+      <nav class="footer-right" aria-label="Links">
         <a href="https://vixpi.host" target="_blank" rel="noopener noreferrer">vixpi.host</a>
         <a href="https://github.com/gcnsolucoes/404" target="_blank" rel="noopener noreferrer">github</a>
+        <a href="mailto:suporte@gcnsolucoes.com.br">suporte</a>
       </nav>
     </footer>
 
