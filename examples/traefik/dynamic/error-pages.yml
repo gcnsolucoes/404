@@ -1,0 +1,14 @@
+http:
+  middlewares:
+    error-pages:
+      errors:
+        status:
+          - "400-599"
+        service: error-pages-svc
+        query: "/{status}.html"
+
+  services:
+    error-pages-svc:
+      loadBalancer:
+        servers:
+          - url: "http://error-pages:80"

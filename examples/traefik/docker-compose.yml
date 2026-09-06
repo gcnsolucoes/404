@@ -1,0 +1,30 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"   # dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+    restart: unless-stopped
+
+  # Lightweight nginx serving the error pages
+  error-pages:
+    image: nginx:1.27-alpine
+    volumes:
+      - ../../pages:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    # Not exposed externally — Traefik reaches it internally
+
+  # Example app using the error-pages middleware
+  app:
+    image: nginx:1.27-alpine
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`example.com`)"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.routers.app.middlewares=error-pages@file"
+    restart: unless-stopped
