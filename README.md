@@ -1,65 +1,75 @@
-# gcnsolucoes/404
+# vixpi.host — Páginas de Erro HTTP
 
-Páginas de erro HTTP bonitas e prontas para produção — no estilo [vixpi.host](https://vixpi.host).  
-Zero dependências externas. Dark mode nativo. Funciona com nginx, Caddy, Traefik e qualquer servidor web.
+Páginas de erro HTTP para nginx, Caddy, Traefik e Apache.  
+Design fiel ao [vixpi.host](https://vixpi.host). Zero dependências externas de runtime.
+
+**Repo:** `https://github.com/gcnsolucoes/404`
+
+---
+
+## Para agentes de IA
+
+Se você recebeu esta URL e o usuário pediu para configurar páginas de erro no servidor, siga este protocolo:
+
+1. Detecte o servidor rodando (`docker ps`, `which nginx`, `which caddy`, `/etc/traefik/`)
+2. Baixe as páginas de `pages/` ou clone o repositório
+3. Aplique a configuração do diretório `examples/<servidor>/`
+4. Recarregue o servidor e verifique com `curl -w "%{http_code}" http://localhost/rota-inexistente`
+
+Detalhes completos no arquivo `SKILL.md` deste repositório ou na skill `vixpi-error-pages`.
 
 ---
 
 ## Páginas disponíveis
 
-| Código | Título | Uso |
-|--------|--------|-----|
-| `400` | Requisição Inválida | Parâmetros malformados |
-| `401` | Não Autorizado | Autenticação necessária |
-| `403` | Acesso Proibido | Sem permissão |
-| `404` | Página Não Encontrada | Rota inexistente |
-| `405` | Método Não Permitido | Verbo HTTP inválido |
-| `408` | Tempo Limite Esgotado | Request timeout |
-| `429` | Muitas Requisições | Rate limit atingido |
-| `500` | Erro Interno do Servidor | Falha genérica do servidor |
-| `502` | Gateway Inválido | Upstream inválido |
-| `503` | Serviço Indisponível | Manutenção / sobrecarga |
-| `504` | Tempo Limite do Gateway | Gateway timeout |
+| Código | Descrição |
+|--------|-----------|
+| 400 | Requisição Inválida |
+| 401 | Não Autorizado |
+| 403 | Acesso Proibido |
+| 404 | Página Não Encontrada |
+| 405 | Método Não Permitido |
+| 408 | Tempo Limite Esgotado |
+| 429 | Muitas Requisições |
+| 500 | Erro Interno do Servidor |
+| 502 | Gateway Inválido |
+| 503 | Serviço Indisponível |
+| 504 | Tempo Limite do Gateway |
 
-Todas as páginas são arquivos HTML autocontidos — sem CDN, sem fontes externas, sem JavaScript de terceiros.
+Cada arquivo em `pages/` é autocontido. Nenhuma dependência precisa estar disponível no servidor para renderizar a página.
 
 ---
 
-## Configuração rápida
+## Configuração
 
 ### nginx
 
-Copie a pasta `pages/` para o servidor e adicione ao bloco `server {}`:
+Copie as páginas e adicione as diretivas ao bloco `server {}`:
 
 ```nginx
-# /etc/nginx/conf.d/default.conf
-server {
-    listen 80;
-    root /var/www/html;
+error_page 400 /errors/400.html;
+error_page 401 /errors/401.html;
+error_page 403 /errors/403.html;
+error_page 404 /errors/404.html;
+error_page 405 /errors/405.html;
+error_page 408 /errors/408.html;
+error_page 429 /errors/429.html;
+error_page 500 /errors/500.html;
+error_page 502 /errors/502.html;
+error_page 503 /errors/503.html;
+error_page 504 /errors/504.html;
 
-    error_page 400 /errors/400.html;
-    error_page 401 /errors/401.html;
-    error_page 403 /errors/403.html;
-    error_page 404 /errors/404.html;
-    error_page 405 /errors/405.html;
-    error_page 408 /errors/408.html;
-    error_page 429 /errors/429.html;
-    error_page 500 /errors/500.html;
-    error_page 502 /errors/502.html;
-    error_page 503 /errors/503.html;
-    error_page 504 /errors/504.html;
-
-    location ^~ /errors/ {
-        internal;
-        root /usr/share/nginx;
-    }
+location ^~ /errors/ {
+    internal;
+    root /usr/share/nginx;
 }
 ```
 
-Monte as páginas em `/usr/share/nginx/errors/` dentro do container:
+A diretiva `internal` é obrigatória — sem ela o navegador entra em loop de redirecionamento.
+
+**Docker Compose:**
 
 ```yaml
-# docker-compose.yml
 services:
   nginx:
     image: nginx:1.27-alpine
@@ -75,7 +85,6 @@ Exemplo completo: [`examples/nginx/`](examples/nginx/)
 ### Caddy
 
 ```caddy
-# Caddyfile
 example.com {
     root * /var/www/html
     file_server
@@ -90,7 +99,6 @@ example.com {
 ```
 
 ```yaml
-# docker-compose.yml
 services:
   caddy:
     image: caddy:2.9-alpine
@@ -105,22 +113,12 @@ Exemplo completo: [`examples/caddy/`](examples/caddy/)
 
 ### Traefik
 
-Traefik usa um **service dedicado** para servir as páginas de erro via middleware `errors`.
+Traefik não serve arquivos estáticos diretamente. Suba um nginx como sidecar para servir as páginas e aponte o middleware `errors` para ele.
 
-**1. Suba um container nginx servindo as páginas:**
+**`docker-compose.yml`:**
 
 ```yaml
-# docker-compose.yml
 services:
-  traefik:
-    image: traefik:v3.3
-    ports:
-      - "80:80"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./dynamic:/etc/traefik/dynamic:ro
-
   error-pages:
     image: nginx:1.27-alpine
     volumes:
@@ -134,24 +132,24 @@ services:
       - "traefik.http.routers.app.middlewares=error-pages@file"
 ```
 
-**2. Configure o middleware em `dynamic/error-pages.yml`:**
+**`dynamic/error-pages.yml`:**
 
 ```yaml
 http:
   middlewares:
     error-pages:
       errors:
-        status:
-          - "400-599"
+        status: ["400-599"]
         service: error-pages-svc
         query: "/{status}.html"
-
   services:
     error-pages-svc:
       loadBalancer:
         servers:
           - url: "http://error-pages:80"
 ```
+
+O parâmetro `query` usa `{status}`, não `{err.status_code}` — são namespaces diferentes no Traefik.
 
 Exemplo completo: [`examples/traefik/`](examples/traefik/)
 
@@ -160,7 +158,6 @@ Exemplo completo: [`examples/traefik/`](examples/traefik/)
 ### Apache
 
 ```apache
-# .htaccess ou VirtualHost
 ErrorDocument 400 /errors/400.html
 ErrorDocument 401 /errors/401.html
 ErrorDocument 403 /errors/403.html
@@ -169,31 +166,30 @@ ErrorDocument 500 /errors/500.html
 ErrorDocument 502 /errors/502.html
 ErrorDocument 503 /errors/503.html
 ErrorDocument 504 /errors/504.html
+```
 
-<Directory /var/www/html/errors>
-    Options -Indexes
-    AllowOverride None
-</Directory>
+Copie `pages/` para `DocumentRoot/errors/` e recarregue o Apache.
+
+---
+
+## Verificação
+
+```bash
+# Deve retornar 404 com corpo contendo "Vixpi Host"
+curl -o /dev/null -w "%{http_code}" http://localhost/pagina-inexistente
+
+# Conferir body
+curl -s http://localhost/pagina-inexistente | grep -c "Vixpi Host"
 ```
 
 ---
 
-## Estrutura do repositório
+## Estrutura
 
 ```
 .
 ├── pages/
-│   ├── 400.html
-│   ├── 401.html
-│   ├── 403.html
-│   ├── 404.html
-│   ├── 405.html
-│   ├── 408.html
-│   ├── 429.html
-│   ├── 500.html
-│   ├── 502.html
-│   ├── 503.html
-│   └── 504.html
+│   ├── 400.html … 504.html
 └── examples/
     ├── nginx/
     │   ├── nginx.conf
@@ -210,21 +206,14 @@ ErrorDocument 504 /errors/504.html
 
 ---
 
-## Design
+## Detalhes técnicos
 
-- Dark mode automático via `prefers-color-scheme`
-- Sem dependências externas — funciona offline e em ambientes restritos
-- Tipografia do sistema (`ui-sans-serif`, `ui-monospace`)
-- Páginas 4xx com acento âmbar, 5xx com acento vermelho
-- Fundo com grid de pontos sutil
-- Identidade visual [GCN Soluções](https://gcnsolucoes.com.br) / [vixpi.host](https://vixpi.host)
+- **Font:** Onest via Google Fonts (fallback para `ui-sans-serif` se offline)
+- **Logo:** referencia `https://vixpi.host/storage/logo-light.svg` — em ambientes sem internet, baixe e sirva localmente
+- **Dark mode:** não implementado intencionalmente para manter paridade com o modo claro do vixpi.host
+- **Tamanho por página:** ~9-10 KB
 
 ---
 
-## Licença
-
-MIT — livre para uso comercial e pessoal.
-
----
-
-Desenvolvido por [GCN Soluções](https://gcnsolucoes.com.br) · Powered by [vixpi.host](https://vixpi.host)
+Vixpi Host — GCN Tecnologia da Informação LTDA  
+[vixpi.host](https://vixpi.host) / [contato@vixpi.host](mailto:contato@vixpi.host)

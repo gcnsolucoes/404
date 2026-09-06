@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>403 — Acesso Proibido · Vixpi Host</title>
+  <title>403 Acesso Proibido — Vixpi Host</title>
   <style>
 @import url('https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700;800&display=swap');
 
@@ -13,41 +13,40 @@
 :root{
   --primary:hsl(215,80%,48%);
   --primary-dark:hsl(215,80%,40%);
-  --primary-light:hsl(215,80%,60%);
-  --primary-dim:rgba(24,106,220,.08);
-  --primary-border:rgba(24,106,220,.20);
+  --primary-dim:rgba(24,106,220,.07);
+  --primary-border:rgba(24,106,220,.18);
 
   --base:hsl(215,60%,12%);
   --muted:hsl(215,30%,55%);
-  --subtle:hsl(215,20%,75%);
+  --subtle:hsl(215,20%,78%);
 
   --bg:hsl(40,20%,96%);
-  --bg-card:#ffffff;
-  --bg-card2:hsl(40,15%,98%);
+  --bg-card:#fff;
+  --bg-footer:hsl(40,15%,94%);
 
-  --border:rgba(0,0,0,.09);
-  --border-med:rgba(0,0,0,.13);
+  --border:rgba(0,0,0,.08);
+  --border-strong:rgba(0,0,0,.13);
 
-  --error:hsl(0,75%,60%);
-  --error-dim:rgba(220,60,60,.08);
-  --error-border:rgba(220,60,60,.20);
-  --warning:hsl(25,95%,53%);
-  --warning-dim:rgba(245,122,26,.08);
-  --warning-border:rgba(245,122,26,.20);
-  --success:hsl(142,71%,45%);
+  --error:hsl(0,72%,51%);
+  --error-dim:rgba(204,42,42,.07);
+  --error-border:rgba(204,42,42,.18);
+  --warning:hsl(32,95%,44%);
+  --warning-dim:rgba(210,110,8,.07);
+  --warning-border:rgba(210,110,8,.18);
+  --ok:hsl(142,71%,38%);
 
-  /* per-page state accent — overridden inline */
   --acc:var(--primary);
   --acc-dim:var(--primary-dim);
   --acc-border:var(--primary-border);
 
   --font:'Onest',ui-sans-serif,system-ui,-apple-system,sans-serif;
   --font-mono:ui-monospace,'SFMono-Regular',Menlo,Monaco,Consolas,monospace;
-  --shadow-card:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.06);
-  --shadow-lg:0 20px 25px -5px rgba(0,0,0,.08),0 8px 10px -6px rgba(0,0,0,.05);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 8px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:0 16px 32px rgba(0,0,0,.08),0 4px 8px rgba(0,0,0,.05);
 }
 
-html,body{min-height:100%}
+html,body{min-height:100%;height:100%}
 body{
   font-family:var(--font);
   background:var(--bg);
@@ -57,13 +56,13 @@ body{
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
-::selection{background:rgba(24,106,220,.18);color:var(--base)}
+::selection{background:rgba(24,106,220,.15);color:var(--base)}
 
-/* subtle dot grid — barely there */
+/* Dot grid — very subtle, vixpi uses something like this */
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:radial-gradient(circle,rgba(0,0,0,.045) 1px,transparent 1px);
-  background-size:32px 32px;
+  background-image:radial-gradient(circle,rgba(0,0,0,.038) 1px,transparent 1px);
+  background-size:28px 28px;
 }
 
 .wrap{
@@ -74,188 +73,162 @@ body::before{
 
 /* ── Header ── */
 .header{
-  height:68px;padding:0 32px;
+  height:64px;padding:0 40px;flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-  background:rgba(247,245,243,.85);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:var(--bg);
   border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:10;
 }
-
 .logo{
   display:flex;align-items:center;gap:10px;
-  text-decoration:none;color:var(--base);flex-shrink:0;
+  text-decoration:none;color:var(--base);
 }
-.logo img{height:36px;width:auto;display:block}
-.logo-wordmark{
-  font-size:16px;font-weight:700;color:var(--base);
-  letter-spacing:-.01em;
-  /* match vixpi wordmark style */
-  font-family:var(--font);
+.logo img{height:34px;width:auto;display:block}
+.logo-name{
+  font-size:15px;font-weight:700;
+  color:var(--base);letter-spacing:-.01em;
 }
 
-/* status pill in header */
-.status-pill{
+/* status badge — static, no animation */
+.status-badge{
   display:inline-flex;align-items:center;gap:6px;
-  height:30px;padding:0 12px;
-  border-radius:9999px;
-  font-size:12px;font-weight:600;font-family:var(--font-mono);
+  height:28px;padding:0 11px;border-radius:6px;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
   letter-spacing:.06em;text-transform:uppercase;
   border:1px solid var(--acc-border);
   background:var(--acc-dim);
   color:var(--acc);
 }
-.status-pill .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--acc);
-  animation:blink 2.4s ease-in-out infinite;
+/* static dot — no pulse */
+.status-badge .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--acc);flex-shrink:0;
 }
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Operational strip ── */
+.strip{
+  padding:8px 40px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);
+  font-size:12px;color:var(--muted);
+  font-family:var(--font-mono);flex-shrink:0;
+  background:var(--bg);
+}
+.strip-ok{
+  display:flex;align-items:center;gap:5px;
+  color:var(--ok);font-weight:600;
+}
+.strip-ok::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--ok);flex-shrink:0;
+}
+.strip-sep{color:var(--subtle);margin:0 2px}
 
 /* ── Main ── */
 .main{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:80px 24px;text-align:center;
-  position:relative;
+  padding:72px 40px;text-align:center;
 }
-
-/* big faint code number behind content */
-.bg-num{
-  position:absolute;
-  font-family:var(--font-mono);font-weight:800;
-  font-size:clamp(160px,28vw,300px);
-  letter-spacing:-.06em;line-height:1;
-  color:rgba(24,106,220,.055);
-  top:50%;left:50%;transform:translate(-50%,-52%);
-  user-select:none;pointer-events:none;white-space:nowrap;
-}
-
 .content{
-  position:relative;z-index:1;
   display:flex;flex-direction:column;align-items:center;
-  max-width:520px;width:100%;
+  max-width:480px;width:100%;
 }
 
-/* icon card — white card with blue-tinted border */
+/* icon card — clean white card, no glow */
 .icon-card{
-  width:64px;height:64px;border-radius:16px;
+  width:56px;height:56px;border-radius:14px;
   background:var(--bg-card);
   border:1px solid var(--acc-border);
   display:flex;align-items:center;justify-content:center;
-  margin-bottom:28px;
-  box-shadow:var(--shadow-card),0 0 0 6px var(--acc-dim);
+  margin-bottom:24px;
+  box-shadow:var(--shadow-sm);
 }
 .icon-card svg{
-  width:26px;height:26px;
+  width:22px;height:22px;
   stroke:var(--acc);fill:none;
   stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;
 }
 
-/* code & headings */
+/* error code */
 .code{
-  font-size:clamp(56px,12vw,96px);
-  font-weight:800;letter-spacing:-.04em;line-height:1;
-  margin-bottom:12px;
-  color:var(--acc);
+  font-size:clamp(60px,12vw,100px);
+  font-weight:800;letter-spacing:-.05em;line-height:.95;
+  margin-bottom:16px;color:var(--acc);
+  font-family:var(--font-mono);
 }
 .title{
-  font-size:clamp(20px,3vw,28px);
+  font-size:clamp(20px,2.8vw,26px);
   font-weight:700;letter-spacing:-.025em;
-  color:var(--base);margin-bottom:14px;line-height:1.2;
+  color:var(--base);margin-bottom:12px;line-height:1.2;
 }
 .desc{
-  font-size:16px;line-height:1.70;
+  font-size:15px;line-height:1.70;
   font-weight:400;color:var(--muted);
-  margin-bottom:44px;
+  margin-bottom:40px;
 }
 
-/* Buttons — exact vixpi style */
+/* buttons — exact vixpi style */
 .actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
 .btn{
-  display:inline-flex;align-items:center;gap:7px;
-  height:40px;padding:0 20px;
-  border-radius:8px;
-  font-family:var(--font);font-size:14px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;
+  height:40px;padding:0 20px;border-radius:8px;
+  font-family:var(--font);font-size:13.5px;font-weight:600;
   text-decoration:none;cursor:pointer;
-  transition:all .16s ease;white-space:nowrap;
-  line-height:1;
+  transition:background .15s,box-shadow .15s,border-color .15s;
+  white-space:nowrap;line-height:1;
 }
 .btn svg{
-  width:15px;height:15px;flex-shrink:0;
+  width:14px;height:14px;flex-shrink:0;
   stroke:currentColor;fill:none;stroke-width:2.2;
   stroke-linecap:round;stroke-linejoin:round;
 }
-/* ghost — "Entrar" style from vixpi */
 .btn-ghost{
-  border:1px solid var(--border-med);
+  border:1px solid var(--border-strong);
   background:var(--bg-card);
   color:var(--base);
-  box-shadow:var(--shadow-card);
+  box-shadow:var(--shadow-sm);
 }
 .btn-ghost:hover{
   border-color:rgba(0,0,0,.20);
-  box-shadow:var(--shadow-lg);
+  box-shadow:var(--shadow-md);
 }
-/* primary — "Registrar" style from vixpi */
 .btn-primary{
   border:1px solid transparent;
   background:var(--primary);
   color:#fff;
-  box-shadow:0 2px 8px rgba(24,106,220,.30);
+  box-shadow:0 2px 6px rgba(24,106,220,.25);
 }
 .btn-primary:hover{
   background:var(--primary-dark);
-  box-shadow:0 4px 16px rgba(24,106,220,.40);
-}
-
-/* ── Info strip (optional breadcrumb) ── */
-.strip{
-  border-top:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  padding:10px 32px;
-  display:flex;align-items:center;gap:8px;
-  font-size:12px;font-weight:500;color:var(--muted);
-  font-family:var(--font-mono);flex-shrink:0;
-}
-.strip .sep{color:var(--subtle)}
-.strip .online{
-  display:flex;align-items:center;gap:5px;color:var(--success);font-weight:600;
-}
-.strip .online::before{
-  content:'';width:6px;height:6px;border-radius:50%;background:var(--success);
-  box-shadow:0 0 6px var(--success);
+  box-shadow:0 4px 12px rgba(24,106,220,.35);
 }
 
 /* ── Footer ── */
 .footer{
-  padding:20px 32px;flex-shrink:0;
+  padding:18px 40px;flex-shrink:0;
   border-top:1px solid var(--border);
+  background:var(--bg-footer);
   display:flex;align-items:center;justify-content:space-between;
-  gap:12px;flex-wrap:wrap;
-  background:var(--bg-card2);
+  gap:16px;flex-wrap:wrap;
 }
-.footer-left{
-  display:flex;align-items:center;gap:6px;
+.footer-copy{
   font-size:12px;color:var(--muted);
 }
-.footer-left .sep{color:var(--subtle)}
-.footer-right{
-  display:flex;align-items:center;gap:20px;
+.footer-links{
+  display:flex;align-items:center;gap:24px;
   font-size:12px;font-family:var(--font-mono);
 }
-.footer-right a{
+.footer-links a{
   color:var(--muted);text-decoration:none;
   transition:color .15s;letter-spacing:.02em;
 }
-.footer-right a:hover{color:var(--primary)}
+.footer-links a:hover{color:var(--primary)}
 
 @media(max-width:640px){
-  .header{padding:0 18px;height:60px}
-  .strip,.footer{padding-left:18px;padding-right:18px}
-  .main{padding:56px 18px}
-  .logo-wordmark{display:none}
+  .header,.strip,.footer{padding-left:20px;padding-right:20px}
+  .main{padding:56px 20px}
+  .logo-name{display:none}
+  .footer-links{gap:16px}
 }
 :root{--acc:var(--warning);--acc-dim:var(--warning-dim);--acc-border:var(--warning-border)}
   </style>
@@ -263,30 +236,26 @@ body::before{
 <body>
 <div class="wrap">
 
-  <!-- Header -->
   <header class="header">
     <a href="https://vixpi.host" class="logo" aria-label="Vixpi Host">
-      <img src="https://vixpi.host/storage/logo-light.svg" alt="Vixpi Host" height="36">
-      <span class="logo-wordmark">Vixpi Host</span>
+      <img src="https://vixpi.host/storage/logo-light.svg" alt="Vixpi Host" height="34">
+      <span class="logo-name">Vixpi Host</span>
     </a>
-    <span class="status-pill" aria-label="HTTP 403">
+    <span class="status-badge">
       <span class="dot" aria-hidden="true"></span>
-      403
+      HTTP 403
     </span>
   </header>
 
-  <!-- Status strip -->
   <div class="strip">
-    <span class="online">Infraestrutura operacional</span>
-    <span class="sep">·</span>
+    <span class="strip-ok">Infraestrutura operacional</span>
+    <span class="strip-sep">/</span>
     <span>São Paulo, Brasil</span>
-    <span class="sep">·</span>
+    <span class="strip-sep">/</span>
     <span>SLA 99.98%</span>
   </div>
 
-  <!-- Main -->
   <main class="main">
-    <span class="bg-num" aria-hidden="true">403</span>
     <div class="content">
 
       <div class="icon-card" aria-hidden="true">
@@ -295,7 +264,7 @@ body::before{
 
       <div class="code">403</div>
       <h1 class="title">Acesso Proibido</h1>
-      <p class="desc">Você não tem permissão para visualizar este recurso. Entre em contato com o administrador se acreditar que isso é um erro.</p>
+      <p class="desc">Você não tem permissão para acessar este recurso. Contate o administrador se precisar de acesso.</p>
 
       <div class="actions">
         <button class="btn btn-ghost" onclick="history.back()" type="button">
@@ -309,15 +278,10 @@ body::before{
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="footer">
-    <div class="footer-left">
-      <span>© 2025 Vixpi Host</span>
-      <span class="sep">·</span>
-      <span>GCN Tecnologia da Informação LTDA</span>
-    </div>
-    <nav class="footer-right" aria-label="Links">
-      <a href="https://vixpi.host" target="_blank" rel="noopener noreferrer">vixpi.host</a>
+    <span class="footer-copy">Vixpi Host — GCN Tecnologia da Informação LTDA</span>
+    <nav class="footer-links" aria-label="Links">
+      <a href="https://vixpi.host">vixpi.host</a>
       <a href="https://github.com/gcnsolucoes/404" target="_blank" rel="noopener noreferrer">github</a>
       <a href="mailto:contato@vixpi.host">contato@vixpi.host</a>
     </nav>
